@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
-const useHttp = (requestConfig, applyData) => {
+// const useHttp = (requestConfig, applyData) => {
+const useHttp = (applyData) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const sendRequest = async (taskText) => {
+    const sendRequest = useCallback(async (requestConfig) => {
       setIsLoading(true);
       setError(null);
       try {
@@ -30,17 +31,17 @@ const useHttp = (requestConfig, applyData) => {
 
       const data = await response.json();
       applyData(data);
-    //   const loadedTasks = [];
-    //   for (const taskKey in data) {
-    //     loadedTasks.push({ id: taskKey, text: data[taskKey].text });
-    //   }
-    //   setTasks(loadedTasks);
+      //   const loadedTasks = [];
+      //   for (const taskKey in data) {
+      //     loadedTasks.push({ id: taskKey, text: data[taskKey].text });
+      //   }
+      //   setTasks(loadedTasks);
 
-    } catch (err) {
-      setError(err.message || 'Something went wrong!');
-    }
-    setIsLoading(false);
-  };
+      } catch (err) {
+        setError(err.message || 'Something went wrong!');
+      }
+      setIsLoading(false);
+    }, [applyData]);
 
   return {
     isLoading: isLoading,
